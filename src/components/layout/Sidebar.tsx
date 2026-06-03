@@ -1,4 +1,5 @@
 import { NavLink } from "react-router";
+import { User } from "lucide-react";
 import logo from "../../assets/logo.svg";
 
 const NavItem = [
@@ -28,43 +29,14 @@ const NavItem = [
   },
 ];
 
-type SidebarProps = {
-  isOpen: boolean;
-  setIsOpen: (val: boolean) => void;
-};
-
-export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
+export default function Sidebar() {
   return (
-    <>
-      {/* Mobile Overlay */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black/60 z-[49] lg:hidden backdrop-blur-sm transition-opacity"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
-
-      {/* Sidebar Drawer */}
-      <aside 
-        className={[
-          "w-64 border-r border-green/55 px-5 py-6 flex flex-col bg-[#030603]",
-          "fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out h-[100dvh]",
-          "lg:relative lg:translate-x-0",
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        ].join(" ")}
-      >
-        <div className="flex items-center justify-between border-b border-green/55 pb-4">
-          <div className="flex items-center">
-            <img src={logo} alt="Logo" className="mr-3 h-8 w-8" />
-            <h1 className="text-xl font-bold text-green">DCC</h1>
-          </div>
-          <button onClick={() => setIsOpen(false)} className="lg:hidden text-green hover:text-white">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-      <nav className="pt-6 text-green">
+    <aside className="w-80 border-r border-green/55 px-6 py-7 flex flex-col h-[calc(100vh-1px)] sticky top-0">
+      <div className="flex items-center border-b border-green/55 pb-5 shrink-0">
+        <img src={logo} alt="Logo" className="mr-3 h-10 w-10" />
+        <h1 className="text-2xl font-bold text-green">DCC</h1>
+      </div>
+      <nav className="pt-6 text-green flex-1 overflow-y-auto custom-scrollbar">
         <ul className="space-y-2.5">
           {NavItem.map((item) => (
             <li key={item.path}>
@@ -73,7 +45,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                 end={item.path === "/"}
                 className={({ isActive }) =>
                   [
-                    "relative block rounded-md px-4 py-2.5 text-sm font-medium leading-none transition-colors duration-150",
+                    "relative block rounded-lg px-6 py-3.5 text-sm font-medium leading-none transition-colors duration-150",
                     isActive
                       ? "border border-green/80 bg-[#00230d] text-green before:absolute before:inset-y-0 before:left-0 before:w-2 before:rounded-l-lg before:bg-green before:content-['']"
                       : "text-green font-normal hover:bg-[#00190a]",
@@ -86,7 +58,19 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
           ))}
         </ul>
       </nav>
+
+      {/* PROFILE SECTION */}
+      <div className="mt-auto border-t border-green/55 pt-6 shrink-0">
+        <div className="flex items-center gap-4 rounded-[4.9px] border border-green/60 p-3 hover:bg-green/5 cursor-pointer transition-colors">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-green/60 bg-green/10 text-green">
+            <User size={20} strokeWidth={2} />
+          </div>
+          <div className="flex flex-col gap-0.5">
+            <span className="text-[13px] font-semibold text-green leading-none">Admin User</span>
+            <span className="text-[11px] font-medium text-green/70 leading-none">Administrator</span>
+          </div>
+        </div>
+      </div>
     </aside>
-    </>
   );
 }

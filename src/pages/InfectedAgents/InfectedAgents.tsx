@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useParams } from "react-router";
 import CommandExecutionTab from "./components/CommandExecutionTab";
 import ReverseShellTab from "./components/ReverseShellTab";
 import FileManagerTab from "./components/FileManagerTab";
@@ -14,33 +13,24 @@ const tabs: { key: Tab; label: string; icon: string }[] = [
 ];
 
 export default function InfectedAgents() {
-  const { id } = useParams<{ id: string }>();
   const [activeTab, setActiveTab] = useState<Tab>("command");
-
-  if (!id) {
-    return (
-      <div className="w-full flex items-center justify-center min-h-[50vh]">
-        <p className="text-green/50 text-xl font-mono">No target selected. Return to Dashboard to select an agent.</p>
-      </div>
-    );
-  }
 
   return (
     <div className="w-full">
       {/* Header */}
-      <div className="flex flex-col px-8 py-6">
+      <div className="flex flex-col px-4 sm:px-8 lg:px-14 py-6 md:py-10">
         <div className="w-full border-b border-green">
-          <h1 className="text-2xl font-semibold text-green pb-5">
-            Infected Agents <span className="inline-block w-2 h-2 rounded-full bg-green ml-2 animate-pulse" />
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-green pb-5 md:pb-7 flex items-center">
+            Infected Agents <span className="inline-block w-2 h-2 md:w-3 md:h-3 rounded-full bg-green ml-2 animate-pulse" />
           </h1>
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8 px-4 sm:px-8 pb-8">
+      <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 px-4 sm:px-8 lg:px-14 pb-10">
         {/* Main Content */}
-        <div className="flex-1 flex flex-col gap-6 min-w-0">
+        <div className="flex-1 flex flex-col gap-6 min-w-0 overflow-x-hidden">
           {/* Tabs */}
-          <div className="flex gap-1 border-b border-green/30 overflow-x-auto whitespace-nowrap pb-1">
+          <div className="flex gap-1 border-b border-green/30 overflow-x-auto whitespace-nowrap">
             {tabs.map((tab) => (
               <button
                 key={tab.key}
@@ -59,13 +49,13 @@ export default function InfectedAgents() {
           </div>
 
           {/* Tab Content */}
-          {activeTab === "command" && <CommandExecutionTab agentId={id} />}
-          {activeTab === "reverse-shell" && <ReverseShellTab agentId={id} />}
-          {activeTab === "file-manager" && <FileManagerTab agentId={id} />}
+          {activeTab === "command" && <CommandExecutionTab />}
+          {activeTab === "reverse-shell" && <ReverseShellTab />}
+          {activeTab === "file-manager" && <FileManagerTab />}
         </div>
 
         {/* Agent Information Sidebar */}
-        <AgentInformation agentId={id} />
+        <AgentInformation />
       </div>
     </div>
   );

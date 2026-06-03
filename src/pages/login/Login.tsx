@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { useAuth } from '../../contexts/AuthContext';
-import { fetchJson } from '../../lib/api';
-// Assuming they use Tailwind, I'll provide a minimal green-themed login.
+import { useAuth } from '@/contexts/AuthContext';
+import { fetchJson } from '@/services/api';
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
