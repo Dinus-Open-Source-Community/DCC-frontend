@@ -2,21 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import NoteCard from "./components/NoteCard";
 import NoteForm from "./components/NoteForm";
-import { ScrollArea } from "@/components/ui/scroll-area"
 
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button";
 
-const API_BASE_URL = "http://103.246.107.125:8080/api/notes";
+const API_BASE_URL = "/api/notes";
 const axiosInstance = axios.create({
   withCredentials: true,
 });
@@ -104,38 +92,6 @@ export default function Notes() {
           Notes
           <span className="inline-block w-3 h-3 rounded-full bg-green ml-2 animate-pulse"></span>
         </h1>
-        {/*<Dialog>
-          <form>
-            <DialogTrigger asChild>
-              <Button variant="outline">Add Note</Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-sm">
-              <DialogHeader>
-                <DialogTitle>Edit profile</DialogTitle>
-                <DialogDescription>
-                  Make changes to your profile here. Click save when you&apos;re
-                  done.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="flex flex-col gap-4 py-4">
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="name-1" className="text-sm font-medium">Name</label>
-                  <input id="name-1" name="name" defaultValue="Pedro Duarte" className="border p-2 rounded-md" />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="username-1" className="text-sm font-medium">Username</label>
-                  <input id="username-1" name="username" defaultValue="@peduarte" className="border p-2 rounded-md" />
-                </div>
-              </div>
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button variant="outline">Cancel</Button>
-                </DialogClose>
-                <Button type="submit">Save changes</Button>
-              </DialogFooter>
-            </DialogContent>
-          </form>
-        </Dialog>*/}
       </div>
 
       {/* MAIN LAYOUT (Dua Kolom) */}
