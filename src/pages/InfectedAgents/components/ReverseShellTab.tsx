@@ -168,10 +168,10 @@ export default function ReverseShellTab({ clientId }: ReverseShellTabProps) {
         : clientId || "Active";
 
   return (
-    <div className="flex flex-col gap-4 sm:gap-6 font-mono">
-      <div className="border border-green/40 rounded-lg p-4 sm:p-6 bg-black/40">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-6">
-          <h2 className="text-lg sm:text-xl font-semibold text-white">Reverse Shell Console</h2>
+    <div className="flex flex-col gap-4 font-mono">
+      <div className="border border-green/30 rounded-md p-3 sm:p-4 bg-black/40">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 mb-4">
+          <h2 className="text-sm uppercase tracking-wider font-semibold text-green">Reverse Shell Console</h2>
           {error && (
             <span className="text-red-500 text-xs mr-2">[ERROR]: {error}</span>
           )}
@@ -179,7 +179,7 @@ export default function ReverseShellTab({ clientId }: ReverseShellTabProps) {
             <button
               onClick={handleActivate}
               disabled={!clientId}
-              className="w-full sm:w-auto border border-green/50 rounded px-4 py-2 text-green text-sm font-semibold hover:bg-green/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+              className="w-full sm:w-auto border border-green/40 rounded px-3 py-1.5 text-green text-sm font-semibold hover:bg-green/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
               Activate Reverse Shell
             </button>
@@ -187,16 +187,16 @@ export default function ReverseShellTab({ clientId }: ReverseShellTabProps) {
             <button
               onClick={handleTerminate}
               disabled={!clientId}
-              className="w-full sm:w-auto border border-red-500/50 rounded px-4 py-2 text-red-500 text-sm font-semibold hover:bg-red-500/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+              className="w-full sm:w-auto border border-red-500/50 rounded px-3 py-1.5 text-red-500 text-sm font-semibold hover:bg-red-500/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
               Terminate Shell
             </button>
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="border border-green/30 rounded-lg p-4 bg-[#0a0f0a]">
-            <div className="flex items-center gap-2 text-gray-400 text-xs mb-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+          <div className="border border-green/30 rounded-md p-3 bg-[#0a0f0a]">
+            <div className="flex items-center gap-2 text-gray-400 text-[10px] uppercase tracking-wider mb-1.5">
               <span className="text-green">⚡</span> Connection Status
             </div>
             <div className="flex items-center gap-2">
@@ -205,8 +205,8 @@ export default function ReverseShellTab({ clientId }: ReverseShellTabProps) {
             </div>
           </div>
 
-          <div className="border border-green/30 rounded-lg p-4 bg-[#0a0f0a]">
-            <div className="flex items-center gap-2 text-gray-400 text-xs mb-2">
+          <div className="border border-green/30 rounded-md p-3 bg-[#0a0f0a]">
+            <div className="flex items-center gap-2 text-gray-400 text-[10px] uppercase tracking-wider mb-1.5">
               <span className="text-red-500">■</span> Session ID
             </div>
             <p className="text-white text-sm truncate" title={sessionIdValue}>
@@ -214,20 +214,20 @@ export default function ReverseShellTab({ clientId }: ReverseShellTabProps) {
             </p>
           </div>
 
-          <div className="border border-green/30 rounded-lg p-4 bg-[#0a0f0a]">
-            <div className="flex items-center gap-2 text-gray-400 text-xs mb-2">
+          <div className="border border-green/30 rounded-md p-3 bg-[#0a0f0a]">
+            <div className="flex items-center gap-2 text-gray-400 text-[10px] uppercase tracking-wider mb-1.5">
               <span className="text-green">⚡</span> Listening Port
             </div>
             <p className="text-white text-sm">{shellPort || "31229"}</p>
           </div>
         </div>
 
-        <div className="border border-green/30 rounded-lg overflow-hidden bg-[#0a0f0a]">
-          <div className="flex items-center justify-between px-4 py-2.5 border-b border-green/20 bg-[#111811]">
+        <div className="border border-green/30 rounded-md overflow-hidden bg-[#0a0f0a]">
+          <div className="flex items-center justify-between px-3 py-2 border-b border-green/20 bg-[#111811]">
             <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-red-500" />
-              <span className="w-3 h-3 rounded-full bg-yellow-500" />
-              <span className="w-3 h-3 rounded-full bg-green" />
+              <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
+              <span className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
+              <span className="w-2.5 h-2.5 rounded-full bg-green" />
               <span className="text-gray-400 text-sm ml-2">Terminal</span>
             </div>
             <span
@@ -247,15 +247,15 @@ export default function ReverseShellTab({ clientId }: ReverseShellTabProps) {
             </span>
           </div>
 
-          <div className="p-4 bg-[#0a0f0a]">
+          <div className="p-3 bg-[#0a0f0a]">
             {status === "connected" ? (
-              <div ref={terminalRef} className="w-full h-auto min-h-[240px] text-green" />
+              <div ref={terminalRef} className="w-full h-auto min-h-[200px] text-green" />
             ) : status === "connecting" ? (
-              <div className="min-h-[240px] flex items-center justify-center">
+              <div className="min-h-[200px] flex items-center justify-center">
                 <TerminalLoading />
               </div>
             ) : (
-              <div className="min-h-[240px] flex items-center justify-center">
+              <div className="min-h-[200px] flex items-center justify-center">
                 <p className="text-gray-600 italic">Waiting for connection...</p>
               </div>
             )}

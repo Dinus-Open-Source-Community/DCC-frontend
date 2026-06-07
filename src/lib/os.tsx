@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { toTimestamp } from "@/lib/format";
 
 export type OsBadge = {
   label: string;
@@ -41,8 +42,11 @@ export function getOsBadge(osName: string): OsBadge {
   };
 }
 
-export function isClientOnline(lastSeen: string | number | Date, timeoutMs = 60000): boolean {
-  const timestamp = new Date(lastSeen).getTime();
+export function isClientOnline(
+  lastSeen: string | number | Date | object | null | undefined,
+  timeoutMs = 60000
+): boolean {
+  const timestamp = toTimestamp(lastSeen);
   if (Number.isNaN(timestamp)) return false;
   return Date.now() - timestamp < timeoutMs;
 }

@@ -25,16 +25,16 @@ export default function StatCard({
   return (
     <div
       className={cn(
-        "rounded-lg border px-4 py-4 sm:px-7 sm:py-6 space-y-2 sm:space-y-3 transition-colors",
+        "rounded-md border px-4 py-3 sm:px-5 sm:py-4 space-y-1 transition-colors",
         accentStyles[accent],
         className
       )}
     >
-      <div className="flex items-center justify-between gap-2 font-normal text-lg sm:text-xl">
+      <div className="flex items-center justify-between gap-2 text-xs uppercase tracking-wider font-medium">
         <span>{title}</span>
         {icon && <span className="opacity-80">{icon}</span>}
       </div>
-      <div className="font-semibold text-3xl sm:text-4xl">{value}</div>
+      <div className="font-semibold text-2xl sm:text-3xl">{value}</div>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import InfectedAgentsTable from "./components/InfectedAgentsTable";
 import SystemLogsCard from "./components/SystemLogsCard";
 import { clientService } from "@/services/clientService";
 import { logService } from "@/services/logService";
+import { toTimestamp } from "@/lib/format";
 
 export default function Dashboard() {
   const [stats, setStats] = useState([
@@ -41,9 +42,9 @@ export default function Dashboard() {
       ]);
 
       const mappedRows = (displayData.clients || []).map((client) => {
-        const lastSeen = new Date(client.last_seen).getTime();
-        const now = new Date().getTime();
-        const isOnline = now - lastSeen < 60000;
+        const lastSeen = toTimestamp(client.last_seen);
+        const now = Date.now();
+        const isOnline = lastSeen > 0 && now - lastSeen < 60000;
 
         return {
           id: client.id,
@@ -59,7 +60,7 @@ export default function Dashboard() {
       setRows(mappedRows);
 
       const formattedLogs = (logsData || []).slice(0, 10).map((log: any) => {
-        const date = new Date(log.created_at);
+        const date = new Date(toTimestamp(log.created_at));
         const hours = String(date.getHours()).padStart(2, "0");
         const minutes = String(date.getMinutes()).padStart(2, "0");
         const seconds = String(date.getSeconds()).padStart(2, "0");
@@ -120,24 +121,23 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="flex flex-col px-4 sm:px-8 lg:px-14 py-6 lg:py-10">
+    <div className="flex flex-col px-4 sm:px-6 lg:px-10 py-5 sm:py-7 lg:py-9">
       <div className="w-full border-b border-green">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-green pb-5 lg:pb-7 flex items-center">
+        <h1 className="text-xl sm:text-2xl font-semibold text-green pb-3 sm:pb-4 flex items-center">
           Dashboard
-          <span className="inline-block w-2 h-2 lg:w-3 lg:h-3 rounded-full bg-green ml-2 animate-pulse" />
+          <span className="inline-block w-2 h-2 rounded-full bg-green ml-2 animate-pulse" />
         </h1>
       </div>
 
       {error && (
-        <div className="mt-4 p-4 border border-red-500/50 bg-red-950/20 text-red-400 font-mono text-sm rounded relative">
+        <div className="mt-4 p-3 border border-red-500/50 bg-red-950/20 text-red-400 font-mono text-xs rounded relative">
           <div className="absolute top-0 left-0 border-t-2 border-l-2 border-red-500 w-3 h-3 -mt-[1px] -ml-[1px]" />
           <div className="absolute top-0 right-0 border-t-2 border-r-2 border-red-500 w-3 h-3 -mt-[1px] -mr-[1px]" />
           [WARNING] SYSTEM ERROR: {error}
         </div>
       )}
 
-      {/* Stats Card */}
-      <div className="mt-6 lg:mt-9 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-5">
+      <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
         {stats.map((item) => (
           <StatCard
             key={item.title}
@@ -147,7 +147,7 @@ export default function Dashboard() {
           />
         ))}
       </div>
-      <div className="mt-6 lg:mt-6 grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-5">
+      <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
         <InfectedAgentsTable rows={rows} />
         <SystemLogsCard logs={logs} />
       </div>

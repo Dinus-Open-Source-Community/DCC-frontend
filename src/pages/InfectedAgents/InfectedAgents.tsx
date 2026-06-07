@@ -104,21 +104,21 @@ export default function InfectedAgents() {
 
   if (clients.length === 0) {
     return (
-      <div className="w-full flex flex-col px-4 sm:px-8 lg:px-14 py-6 md:py-10">
+      <div className="w-full flex flex-col px-4 sm:px-6 lg:px-10 py-5 sm:py-7 lg:py-9">
         <div className="w-full border-b border-green">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-green pb-5 md:pb-7 flex items-center">
-            Infected Agents <span className="inline-block w-2 h-2 md:w-3 md:h-3 rounded-full bg-red-500 ml-2 animate-pulse" />
+          <h1 className="text-xl sm:text-2xl font-semibold text-green pb-3 sm:pb-4 flex items-center">
+            Infected Agents <span className="inline-block w-2 h-2 rounded-full bg-red-500 ml-2 animate-pulse" />
           </h1>
         </div>
-        <div className="mt-10 flex flex-col items-center justify-center border border-green/30 bg-[#0A0F0A] rounded-xl p-10 text-center font-mono">
-          <div className="text-red-500 text-3xl mb-4">⚠️</div>
-          <div className="text-green text-lg font-bold uppercase tracking-widest mb-2">NO INFECTED AGENTS DETECTED</div>
+        <div className="mt-6 flex flex-col items-center justify-center border border-green/30 bg-[#0A0F0A] rounded-md p-6 text-center font-mono">
+          <div className="text-red-500 text-2xl mb-3">⚠️</div>
+          <div className="text-green text-base font-bold uppercase tracking-wider mb-2">NO INFECTED AGENTS DETECTED</div>
           <p className="text-gray-400 text-sm max-w-md">
             There are currently no active implants connected to the C2 server. Please generate an implant using the Payload Generator and run it on a target machine to establish a secure link.
           </p>
           <button
             onClick={() => navigate("/payload-generator")}
-            className="mt-6 border border-green bg-[#111811] text-green px-6 py-2 rounded-lg font-semibold hover:bg-green hover:text-black transition-colors cursor-pointer"
+            className="mt-4 border border-green bg-[#111811] text-green px-4 py-1.5 rounded-md font-semibold hover:bg-green hover:text-black transition-colors cursor-pointer"
           >
             Go to Payload Generator
           </button>
@@ -129,34 +129,31 @@ export default function InfectedAgents() {
 
   return (
     <div className="w-full">
-      {/* Header */}
-      <div className="flex flex-col px-4 sm:px-8 lg:px-14 py-6 md:py-10">
+      <div className="flex flex-col px-4 sm:px-6 lg:px-10 py-5 sm:py-7 lg:py-9">
         <div className="w-full border-b border-green">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-green pb-5 md:pb-7 flex items-center">
-            Infected Agents <span className="inline-block w-2 h-2 md:w-3 md:h-3 rounded-full bg-green ml-2 animate-pulse" />
+          <h1 className="text-xl sm:text-2xl font-semibold text-green pb-3 sm:pb-4 flex items-center">
+            Infected Agents <span className="inline-block w-2 h-2 rounded-full bg-green ml-2 animate-pulse" />
           </h1>
         </div>
       </div>
 
       {error && (
-        <div className="mx-4 sm:mx-8 lg:mx-14 mb-6 p-4 border border-red-500/50 bg-red-950/20 text-red-400 font-mono text-sm rounded relative">
+        <div className="mx-4 sm:mx-6 lg:mx-10 mb-4 p-3 border border-red-500/50 bg-red-950/20 text-red-400 font-mono text-xs rounded relative">
           <div className="absolute top-0 left-0 border-t-2 border-l-2 border-red-500 w-3 h-3 -mt-[1px] -ml-[1px]" />
           <div className="absolute top-0 right-0 border-t-2 border-r-2 border-red-500 w-3 h-3 -mt-[1px] -mr-[1px]" />
           [WARNING] TELEMETRY FAULT: {error}
         </div>
       )}
 
-      <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 px-4 sm:px-8 lg:px-14 pb-10">
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col gap-6 min-w-0 overflow-x-hidden">
-          {/* Tabs */}
+      <div className="flex flex-col lg:flex-row gap-4 px-4 sm:px-6 lg:px-10 pb-8">
+        <div className="flex-1 flex flex-col gap-4 min-w-0 overflow-x-hidden">
           <div className="flex gap-1 border-b border-green/30 overflow-x-auto whitespace-nowrap">
             {tabs.map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
                 className={[
-                  "flex items-center gap-2 px-5 py-3 text-sm font-semibold transition-colors cursor-pointer",
+                  "flex items-center gap-2 px-3 py-2 text-sm font-semibold transition-colors cursor-pointer",
                   activeTab === tab.key
                     ? "text-green border-b-2 border-green"
                     : "text-gray-500 hover:text-green/70",
@@ -168,7 +165,6 @@ export default function InfectedAgents() {
             ))}
           </div>
 
-          {/* Tab Content */}
           {activeTab === "command" && <CommandExecutionTab clientId={selectedClient?.id} />}
           {activeTab === "reverse-shell" && <ReverseShellTab clientId={selectedClient?.id} />}
           {activeTab === "file-manager" && (
@@ -176,7 +172,6 @@ export default function InfectedAgents() {
           )}
         </div>
 
-        {/* Agent Information Sidebar */}
         <AgentInformation client={selectedClient} />
       </div>
     </div>
