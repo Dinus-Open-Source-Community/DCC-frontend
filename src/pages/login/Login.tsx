@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useAuth } from '@/contexts/AuthContext';
-import { fetchJson } from '@/services/api';
+import { authService } from '@/services/authService';
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -18,10 +18,7 @@ const Login: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      const resp: any = await fetchJson('/api/login', {
-        method: 'POST',
-        body: JSON.stringify({ username, password })
-      });
+      const resp = await authService.login(username, password);
 
       if (resp.success) {
         setIsAuthenticated(true);

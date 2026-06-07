@@ -13,12 +13,32 @@ export const fetchJson = async <T>(url: string, options: RequestInit = {}): Prom
   }
 
   const response = await apiFetch(url, { ...options, headers });
-  
+
+  const contentType = response.headers.get('Content-Type');
+  if (contentType && contentType.includes('text/html')) {
+    throw new Error('Server returned HTML instead of JSON. Please verify if the C2 backend is running on port 8080.');
+  }
+
   if (!response.ok) {
-    let errorMsg = response.statusText;
+    let errorMsg = `${response.status} ${response.statusText}`.trim();
     try {
-      const errorData = await response.json();
-      errorMsg = errorData.error || errorMsg;
+      const text = await response.text();
+      if (text) {
+        try {
+          const errorData = JSON.parse(text);
+          if (errorData && typeof errorData === 'object' && 'error' in errorData) {
+            errorMsg = String(errorData.error);
+          } else if (errorData && typeof errorData === 'object' && 'message' in errorData) {
+            errorMsg = String(errorData.message);
+          } else if (typeof errorData === 'string') {
+            errorMsg = errorData;
+          } else {
+            errorMsg = text.slice(0, 500);
+          }
+        } catch {
+          errorMsg = text.slice(0, 500);
+        }
+      }
     } catch {
       // Ignored
     }
