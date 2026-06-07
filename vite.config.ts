@@ -17,12 +17,12 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: 'http://103.246.107.125:8080',
         changeOrigin: true,
         secure: false,
       },
       '/ws': {
-        target: 'http://localhost:8080',
+        target: 'http://103.246.107.125:8080',
         ws: true,
       }
     }
