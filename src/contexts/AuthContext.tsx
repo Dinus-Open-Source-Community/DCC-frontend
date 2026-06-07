@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { apiFetch } from '@/services/api';
+import { authService } from '@/services/authService';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -16,12 +16,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const checkAuth = async () => {
     try {
-      const response = await apiFetch('/api/auth/status');
-      if (response.ok) {
-        setIsAuthenticated(true);
-      } else {
-        setIsAuthenticated(false);
-      }
+      const isAuth = await authService.checkAuthStatus();
+      setIsAuthenticated(isAuth);
     } catch {
       setIsAuthenticated(false);
     } finally {
