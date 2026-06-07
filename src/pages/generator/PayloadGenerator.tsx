@@ -1,21 +1,64 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Download, Check, ChevronDown } from "lucide-react";
+import axios from "axios";
+
+const axiosInstance = axios.create({
+    withCredentials: true,
+});
 
 export default function PayloadGenerator() {
-    const [status, setStatus] = useState<"idle" | "processing" | "success">("idle");
+    const [status, setStatus] = useState<"idle" | "processing" | "success" | "error">("idle");
+    const [errorMessage, setErrorMessage] = useState("");
+    
+    // Form States
+    const [osTarget, setOsTarget] = useState("windows");
+    const [ip, setIp] = useState("192.168.56.1");
     const [port, setPort] = useState(8080);
+    const [antiDebug, setAntiDebug] = useState(false);
+    const [antiVm, setAntiVm] = useState(false);
+    const [suicide, setSuicide] = useState(false);
 
-    useEffect(() => {
-        if (status === "processing") {
-            const timer = setTimeout(() => {
-                setStatus("success");
-            }, 3000);
-            return () => clearTimeout(timer);
-        }
-    }, [status]);
-
-    const handleSave = () => {
+    const handleSave = async () => {
         setStatus("processing");
+        setErrorMessage("");
+
+        const payloadConfig = {
+            os_target: osTarget,
+            ip,
+            port,
+            anti_debug: antiDebug,
+            anti_vm: antiVm,
+            suicide
+        };
+
+        try {
+            const response = await axiosInstance.post('/api/payload/generate', payloadConfig, {
+                responseType: 'blob'
+            });
+
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = osTarget === 'windows' ? 'implant.exe' : 'implant_client';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+            
+            setStatus("success");
+            // Kembalikan ke idle setelah 3 detik
+            setTimeout(() => setStatus("idle"), 3000);
+        } catch (error: unknown) {
+            setStatus("error");
+            if (axios.isAxiosError(error) && error.response && error.response.data instanceof Blob) {
+                const text = await error.response.data.text();
+                setErrorMessage(text);
+            } else if (error instanceof Error) {
+                setErrorMessage(error.message);
+            } else {
+                setErrorMessage("Failed to generate payload");
+            }
+        }
     };
 
     return (
@@ -33,11 +76,13 @@ export default function PayloadGenerator() {
                     <div>
                         <label className="block text-green text-sm mb-2">Target OS</label>
                         <div className="relative">
-                            <select className="w-full bg-black border border-green/50 rounded-lg p-3 text-white outline-none focus:border-green transition-all appearance-none cursor-pointer">
-                                <option value="windows">Windows</option>
-                                <option value="linux">Linux</option>
-                                <option value="macos">macOS</option>
-                                <option value="android">Android</option>
+                            <select 
+                                value={osTarget}
+                                onChange={(e) => setOsTarget(e.target.value)}
+                                className="w-full bg-black border border-green/50 rounded-lg p-3 text-white outline-none focus:border-green transition-all appearance-none cursor-pointer"
+                            >
+                                <option value="windows">Windows (x86_64)</option>
+                                <option value="linux">Linux (x86_64)</option>
                             </select>
                             <div className="absolute right-4 top-0 bottom-0 flex items-center justify-center pointer-events-none">
                                 <ChevronDown size={16} className="text-green" />
@@ -49,7 +94,8 @@ export default function PayloadGenerator() {
                         <label className="block text-green text-sm mb-2">Server IP / Domain</label>
                         <input
                             type="text"
-                            defaultValue="192.168.56.1"
+                            value={ip}
+                            onChange={(e) => setIp(e.target.value)}
                             className="w-full bg-black border border-green/50 rounded-lg p-3 text-white outline-none focus:border-green transition-all"
                         />
                     </div>
@@ -82,21 +128,36 @@ export default function PayloadGenerator() {
                     <div className="bg-[#050A07] border border-green/20 rounded-lg p-6 space-y-4 mt-6">
                         <label className="flex items-center gap-3 cursor-pointer group">
                             <div className="relative flex items-center justify-center">
-                                <input type="checkbox" className="peer appearance-none w-4 h-4 border border-green/50 rounded-sm bg-transparent checked:bg-[#002b11] checked:border-green transition-all cursor-pointer" />
+                                <input 
+                                    type="checkbox" 
+                                    checked={antiDebug}
+                                    onChange={(e) => setAntiDebug(e.target.checked)}
+                                    className="peer appearance-none w-4 h-4 border border-green/50 rounded-sm bg-transparent checked:bg-[#002b11] checked:border-green transition-all cursor-pointer" 
+                                />
                                 <Check size={12} className="absolute text-green opacity-0 peer-checked:opacity-100 pointer-events-none" strokeWidth={3} />
                             </div>
                             <span className="text-green text-sm">Enable Anti-Debugging</span>
                         </label>
                         <label className="flex items-center gap-3 cursor-pointer group">
                             <div className="relative flex items-center justify-center">
-                                <input type="checkbox" className="peer appearance-none w-4 h-4 border border-green/50 rounded-sm bg-transparent checked:bg-[#002b11] checked:border-green transition-all cursor-pointer" />
+                                <input 
+                                    type="checkbox" 
+                                    checked={antiVm}
+                                    onChange={(e) => setAntiVm(e.target.checked)}
+                                    className="peer appearance-none w-4 h-4 border border-green/50 rounded-sm bg-transparent checked:bg-[#002b11] checked:border-green transition-all cursor-pointer" 
+                                />
                                 <Check size={12} className="absolute text-green opacity-0 peer-checked:opacity-100 pointer-events-none" strokeWidth={3} />
                             </div>
                             <span className="text-green text-sm">Enable Anti-VM / Sandbox Evasion</span>
                         </label>
                         <label className="flex items-center gap-3 cursor-pointer group">
                             <div className="relative flex items-center justify-center">
-                                <input type="checkbox" className="peer appearance-none w-4 h-4 border border-green/50 rounded-sm bg-transparent checked:bg-[#002b11] checked:border-green transition-all cursor-pointer" />
+                                <input 
+                                    type="checkbox" 
+                                    checked={suicide}
+                                    onChange={(e) => setSuicide(e.target.checked)}
+                                    className="peer appearance-none w-4 h-4 border border-green/50 rounded-sm bg-transparent checked:bg-[#002b11] checked:border-green transition-all cursor-pointer" 
+                                />
                                 <Check size={12} className="absolute text-green opacity-0 peer-checked:opacity-100 pointer-events-none" strokeWidth={3} />
                             </div>
                             <span className="text-green text-sm">Enable Suicide Mode ( Only work when Anti - VM / Sandbox is enabled or Anti - Debugging is enabled )</span>
@@ -113,8 +174,8 @@ export default function PayloadGenerator() {
                             </button>
 
                             {status === "processing" && (
-                                <div className="mt-4 w-full bg-black border border-orange-500 rounded-lg p-6 flex justify-center items-center">
-                                    <p className="text-orange-500 text-sm font-medium">Compiling payload int the background... Please wait ( this takes time ).</p>
+                                <div className="mt-4 w-full bg-black border border-yellow-500 rounded-lg p-6 flex justify-center items-center">
+                                    <p className="text-yellow-500 text-sm font-medium animate-pulse">Compiling payload in the background... Please wait (this takes time).</p>
                                 </div>
                             )}
 
@@ -122,6 +183,12 @@ export default function PayloadGenerator() {
                                 <div className="mt-4 w-full bg-black border border-green rounded-lg p-6 flex justify-center items-center gap-3">
                                     <Check className="text-green" size={20} strokeWidth={3} />
                                     <p className="text-green text-sm font-medium">Generation complete! Download started.</p>
+                                </div>
+                            )}
+                            
+                            {status === "error" && (
+                                <div className="mt-4 w-full bg-black border border-red-500 rounded-lg p-6 flex justify-center items-center gap-3">
+                                    <p className="text-red-500 text-sm font-medium">❌ Compilation Error: {errorMessage}</p>
                                 </div>
                             )}
                         </div>
