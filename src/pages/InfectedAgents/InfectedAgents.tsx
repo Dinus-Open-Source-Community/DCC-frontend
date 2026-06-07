@@ -20,7 +20,7 @@ export default function InfectedAgents() {
       {/* Header */}
       <div className="flex flex-col px-4 sm:px-8 lg:px-14 py-6 md:py-10">
         <div className="w-full border-b border-green">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-green pb-5 md:pb-7 flex items-center">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-green pb-4 md:pb-5 flex items-center">
             Infected Agents <span className="inline-block w-2 h-2 md:w-3 md:h-3 rounded-full bg-green ml-2 animate-pulse" />
           </h1>
         </div>

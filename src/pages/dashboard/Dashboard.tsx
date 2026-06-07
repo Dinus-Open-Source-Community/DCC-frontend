@@ -55,9 +55,9 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="flex flex-col px-4 sm:px-8 lg:px-14 py-6 lg:py-10">
+    <div className="flex flex-col px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
       <div className="w-full border-b border-green">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-green pb-5 lg:pb-7 flex items-center">
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-green pb-4 lg:pb-5 flex items-center">
           Fairuz ganteng
           <span className="inline-block w-2 h-2 lg:w-3 lg:h-3 rounded-full bg-green ml-2 animate-pulse" />
         </h1>
