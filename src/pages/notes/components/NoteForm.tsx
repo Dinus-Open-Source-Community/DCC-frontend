@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Info } from "lucide-react";
 
 import {
     Dialog,
@@ -47,9 +48,12 @@ export default function NoteForm({
     return (
         <div className="bg-[#0D1117] border border-green/30 p-8 rounded-[10px] flex flex-col h-full">
             <Dialog open={showError} onOpenChange={setShowError}>
-                <DialogContent className="bg-black border-green/50">
+                <DialogContent className="bg-zinc-950 border-green/50 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
                     <DialogHeader>
-                        <DialogTitle className="text-red-500 text-xl font-bold tracking-wide">Validation Error</DialogTitle>
+                        <DialogTitle className="text-red-500 text-xl font-bold tracking-wide flex items-center gap-2">
+                            <Info size={24} />
+                            Failed to save
+                        </DialogTitle>
                         <DialogDescription className="text-green/70 mt-2">
                             The note title cannot be empty. Please provide a valid title before saving.
                         </DialogDescription>
