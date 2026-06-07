@@ -25,3 +25,4 @@ dist-ssr
 
 .agents/*
 dcc-struct.md
+user-flow.md

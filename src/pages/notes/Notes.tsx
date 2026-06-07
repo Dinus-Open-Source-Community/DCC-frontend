@@ -84,11 +84,11 @@ export default function Notes() {
   };
 
   return (
-    <div className="flex flex-col px-14 py-10 w-full h-[calc(100vh-1px)] overflow-hidden">
+    <div className="flex flex-col px-6 md:px-8 py-8 w-full h-[calc(100vh-1px)] overflow-hidden">
       {/* HEADER */}
       <div className="flex justify-between w-full border-b border-green mb-9">
 
-        <h1 className="text-4xl font-semibold text-green pb-7">
+        <h1 className="text-2xl sm:text-3xl font-semibold text-green pb-5">
           Notes
           <span className="inline-block w-3 h-3 rounded-full bg-green ml-2 animate-pulse"></span>
         </h1>

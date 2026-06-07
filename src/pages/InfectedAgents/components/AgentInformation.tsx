@@ -13,17 +13,17 @@ export default function AgentInformation() {
         <div className="space-y-4 font-mono">
           <div>
             <div className="mb-1 text-[10px] text-gray-500">IP ADDRESS</div>
-            <div className="text-sm font-semibold text-green">182.8.193.160</div>
+            <div className="text-base font-semibold text-green">182.8.193.160</div>
           </div>
           <div>
             <div className="mb-1 text-[10px] text-gray-500">HOSTNAME / USER</div>
-            <div className="text-sm text-gray-200">
+            <div className="text-base text-gray-200">
               DESKTOP-RCQH20S <span className="text-green">\</span> ROG
             </div>
           </div>
           <div>
             <div className="mb-1 text-[10px] text-gray-500">TARGET ID HASH</div>
-            <div className="text-xs text-gray-400 break-all">
+            <div className="text-sm text-gray-400 break-all">
               5658c60c-0af0-4cb1-bed3-12dd73de5766
             </div>
           </div>
@@ -65,13 +65,13 @@ export default function AgentInformation() {
           {/* OS Box */}
           <div className="rounded border border-green/20 bg-[#0F140F] p-3 font-mono">
             <div className="mb-1 text-[10px] text-gray-500">OPERATING SYSTEM</div>
-            <div className="text-xs text-green">windows</div>
+            <div className="text-sm text-green">windows</div>
           </div>
 
           {/* Processor Box */}
           <div className="rounded border border-green/20 bg-[#0F140F] p-3 font-mono">
             <div className="mb-1 text-[10px] text-gray-500">PROCESSOR</div>
-            <div className="text-[11px] text-gray-300 leading-relaxed">
+            <div className="text-xs text-gray-300 leading-relaxed">
               Intel(R) Core(TM) i7-7700HQ CPU @ 2.80GHz<br />
               8 Cores @ 2808 MHz
             </div>
@@ -82,7 +82,7 @@ export default function AgentInformation() {
             <div className="rounded border border-green/20 bg-[#0F140F] p-3 font-mono flex flex-col justify-between">
               <div>
                 <div className="mb-1 text-[10px] text-gray-500">DISK SPACE</div>
-                <div className="mb-3 text-[11px] font-semibold text-gray-300">
+                <div className="mb-3 text-xs font-semibold text-gray-300">
                   245418442752.0 GB
                 </div>
               </div>
@@ -97,7 +97,7 @@ export default function AgentInformation() {
             <div className="rounded border border-green/20 bg-[#0F140F] p-3 font-mono flex flex-col justify-between">
               <div>
                 <div className="mb-1 text-[10px] text-gray-500">MEMORY (RAM)</div>
-                <div className="mb-3 text-[11px] font-semibold text-gray-300">13 GB</div>
+                <div className="mb-3 text-xs font-semibold text-gray-300">13 GB</div>
               </div>
               <div className="mt-auto">
                 <div className="mb-1.5 text-[9px] text-gray-500 opacity-0 hidden">USED</div> {/* Spacing spacer */}

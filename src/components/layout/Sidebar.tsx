@@ -31,7 +31,7 @@ const NavItem = [
 
 export default function Sidebar() {
   return (
-    <aside className="w-80 border-r border-green/55 px-6 py-7 flex flex-col h-[calc(100vh-1px)] sticky top-0">
+    <aside className="w-64 border-r border-green/55 px-5 py-6 flex flex-col h-[calc(100vh-1px)] sticky top-0">
       <div className="flex items-center border-b border-green/55 pb-5 shrink-0">
         <img src={logo} alt="Logo" className="mr-3 h-10 w-10" />
         <h1 className="text-2xl font-bold text-green">DCC</h1>
@@ -45,7 +45,7 @@ export default function Sidebar() {
                 end={item.path === "/"}
                 className={({ isActive }) =>
                   [
-                    "relative block rounded-lg px-6 py-3.5 text-sm font-medium leading-none transition-colors duration-150",
+                    "relative block rounded-lg px-4 py-2.5 text-sm font-medium leading-none transition-colors duration-150",
                     isActive
                       ? "border border-green/80 bg-[#00230d] text-green before:absolute before:inset-y-0 before:left-0 before:w-2 before:rounded-l-lg before:bg-green before:content-['']"
                       : "text-green font-normal hover:bg-[#00190a]",
