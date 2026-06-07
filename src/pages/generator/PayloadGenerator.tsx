@@ -11,9 +11,9 @@ export default function PayloadGenerator() {
     const [errorMessage, setErrorMessage] = useState("");
     
     // Form States
-    const [osTarget, setOsTarget] = useState("windows");
-    const [ip, setIp] = useState("192.168.56.1");
-    const [port, setPort] = useState(8080);
+    const [osTarget, setOsTarget] = useState("");
+    const [ip, setIp] = useState("");
+    const [port, setPort] = useState<number | "">("");
     const [antiDebug, setAntiDebug] = useState(false);
     const [antiVm, setAntiVm] = useState(false);
     const [suicide, setSuicide] = useState(false);
@@ -22,10 +22,16 @@ export default function PayloadGenerator() {
         setStatus("processing");
         setErrorMessage("");
 
+        if (!osTarget || !ip || !port) {
+            setStatus("error");
+            setErrorMessage("Please fill in Target OS, Server IP, and Port before compiling.");
+            return;
+        }
+
         const payloadConfig = {
             os_target: osTarget,
             ip,
-            port,
+            port: Number(port),
             anti_debug: antiDebug,
             anti_vm: antiVm,
             suicide
@@ -79,8 +85,9 @@ export default function PayloadGenerator() {
                             <select 
                                 value={osTarget}
                                 onChange={(e) => setOsTarget(e.target.value)}
-                                className="w-full bg-black border border-green/50 rounded-lg p-3 text-white outline-none focus:border-green transition-all appearance-none cursor-pointer"
+                                className={`w-full bg-black border border-green/50 rounded-lg p-3 outline-none focus:border-green transition-all appearance-none cursor-pointer ${osTarget === "" ? "text-green/50" : "text-white"}`}
                             >
+                                <option value="" disabled hidden>-- Select Target OS --</option>
                                 <option value="windows">Windows (x86_64)</option>
                                 <option value="linux">Linux (x86_64)</option>
                             </select>
@@ -95,8 +102,9 @@ export default function PayloadGenerator() {
                         <input
                             type="text"
                             value={ip}
+                            placeholder="e.g., 103.246.107.125 or c2.example.com"
                             onChange={(e) => setIp(e.target.value)}
-                            className="w-full bg-black border border-green/50 rounded-lg p-3 text-white outline-none focus:border-green transition-all"
+                            className="w-full bg-black border border-green/50 rounded-lg p-3 text-white outline-none focus:border-green transition-all placeholder:text-green/30"
                         />
                     </div>
 
@@ -105,18 +113,22 @@ export default function PayloadGenerator() {
                         <div className="relative">
                             <input
                                 type="number"
-                                 value={port}
-                                onChange={(e) => setPort(parseInt(e.target.value) || 0)}
-                                className="w-full bg-black border border-green/50 rounded-lg p-3 text-white outline-none focus:border-green transition-all appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none m-0"
+                                value={port === "" ? "" : port}
+                                placeholder="e.g., 8080"
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    setPort(val === "" ? "" : parseInt(val));
+                                }}
+                                className="w-full bg-black border border-green/50 rounded-lg p-3 text-white outline-none focus:border-green transition-all appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none m-0 placeholder:text-green/30"
                             />
                             <div className="absolute right-4 top-0 bottom-0 flex flex-col items-center justify-center gap-[3px]">
-                                <button type="button" onClick={() => setPort(p => p + 1)} className="text-white hover:text-green transition-colors focus:outline-none flex justify-center">
+                                <button type="button" onClick={() => setPort(p => (p === "" ? 1 : p + 1))} className="text-white hover:text-green transition-colors focus:outline-none flex justify-center">
                                     <svg width="8" height="4" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M1 5L6 1L11 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
                                 </button>
                                 <div className="w-[3px] h-[3px] bg-white rounded-full"></div>
-                                <button type="button" onClick={() => setPort(p => Math.max(0, p - 1))} className="text-white hover:text-green transition-colors focus:outline-none flex justify-center">
+                                <button type="button" onClick={() => setPort(p => (p === "" ? 0 : Math.max(0, p - 1)))} className="text-white hover:text-green transition-colors focus:outline-none flex justify-center">
                                     <svg width="8" height="4" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M1 1L6 5L11 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
