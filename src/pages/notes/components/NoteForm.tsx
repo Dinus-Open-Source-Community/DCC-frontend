@@ -47,11 +47,11 @@ export default function NoteForm({
     return (
         <div className="bg-[#0D1117] border border-green/30 p-8 rounded-[10px] flex flex-col h-full">
             <Dialog open={showError} onOpenChange={setShowError}>
-                <DialogContent className="border-green/50">
+                <DialogContent className="bg-black border-green/50">
                     <DialogHeader>
-                        <DialogTitle className="text-red-500 text-xl">Gagal Menyimpan</DialogTitle>
-                        <DialogDescription className="text-black/80 mt-2">
-                            Judul harus diisi sebelum menyimpan note.
+                        <DialogTitle className="text-red-500 text-xl font-bold tracking-wide">Validation Error</DialogTitle>
+                        <DialogDescription className="text-green/70 mt-2">
+                            The note title cannot be empty. Please provide a valid title before saving.
                         </DialogDescription>
                     </DialogHeader>
                     <div className="flex justify-end mt-4">
