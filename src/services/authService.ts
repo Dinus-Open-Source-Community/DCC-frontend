@@ -2,10 +2,14 @@ import { apiFetch, fetchJson } from './api';
 
 export const authService = {
   login: async (username: string, password: string): Promise<{ success: boolean; error?: string }> => {
-    return fetchJson('/api/login', {
-      method: 'POST',
-      body: JSON.stringify({ username, password }),
-    });
+    try {
+      return await fetchJson('/api/login', {
+        method: 'POST',
+        body: JSON.stringify({ username, password }),
+      });
+    } catch (err: any) {
+      return { success: false, error: err.message || 'Login failed' };
+    }
   },
 
   checkAuthStatus: async (): Promise<boolean> => {

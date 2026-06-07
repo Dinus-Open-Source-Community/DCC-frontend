@@ -6,7 +6,7 @@ import path from "path";
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
-  const apiTarget = env.VITE_API_TARGET || "http://localhost:8080";
+  const apiTarget = env.VITE_API_TARGET || "http://103.246.107.125:8080/";
 
   return {
     plugins: [react(), tailwindcss()],
